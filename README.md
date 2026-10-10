@@ -8,7 +8,7 @@ The architecture bridges a real-time Voice AI orchestration platform with a robu
 
 ```mermaid
 
-graph TD
+graph LR
     classDef clientStyle fill:#1E293B,stroke:#38BDF8,stroke-width:2px,color:#F8FAFC;
     classDef engineStyle fill:#312E81,stroke:#818CF8,stroke-width:2px,color:#F8FAFC;
     classDef agentStyle fill:#0F766E,stroke:#2DD4BF,stroke-width:2px,color:#F8FAFC;
@@ -16,40 +16,43 @@ graph TD
     classDef warningStyle fill:#78350F,stroke:#FBBF24,stroke-width:2px,color:#F8FAFC;
     classDef dangerStyle fill:#7F1D1D,stroke:#F87171,stroke-width:2px,color:#F8FAFC;
 
-    subgraph Client ["Client / Voice Gateway"]
+    subgraph Client ["Client & UI"]
         A["Customer Audio / Web Widget"]:::clientStyle
-    end
-
-    subgraph Retell ["Retell AI Orchestration Engine"]
-        B["Real-time Stream"]:::engineStyle
-        C["Retell AI LLM Gateway"]:::engineStyle
-    end
-
-    subgraph Agent ["Single-Prompt AI Agent (Sharukh)"]
-        D["System Prompt & Intent Parser"]:::agentStyle
-        E["Dynamic State Machine (7-Point Checklist)"]:::agentStyle
-    end
-
-    subgraph Backend ["FastAPI Backend & Python Rules Engine"]
-        F["7-Point Eligibility Rules Evaluator"]:::successStyle
-    end
-
-    subgraph UI ["Validation Suite"]
         G["Streamlit UI Simulator"]:::clientStyle
     end
 
-    %% Flow Connections
-    A -->|"Real-time WebRTC / Audio"| B
-    B -->|"Prompt & Dialogue State"| C
-    C -->|"Context Injection"| D
-    D -->|"Extracts & Validates"| E
-    E -->|"API Validation Request"| F
-    G -->|"Simulates Customer States"| F
+    subgraph Retell ["Retell AI Engine"]
+        B["Real-time Stream"]:::engineStyle
+        C["LLM Gateway"]:::engineStyle
+    end
 
-    %% Outcomes
-    F -->|"Agricultural / Cash Income"| H["Immediate Disqualification & Polite Exit"]:::dangerStyle
-    F -->|"Existing Loan / EMI Reduction"| I["Loan Transfer Specialist Handoff"]:::warningStyle
-    F -->|"All Criteria Passed"| J["Senior Loan Expert Handoff"]:::successStyle
+    subgraph Agent ["AI Agent (Sharukh)"]
+        D["System Prompt"]:::agentStyle
+        E["7-Point State Machine"]:::agentStyle
+    end
+
+    subgraph Backend ["FastAPI Backend"]
+        F["Eligibility Rules Evaluator"]:::successStyle
+    end
+
+    subgraph Outcomes ["Outcomes"]
+        H["Disqualification (Agricultural/Cash)"]:::dangerStyle
+        I["Loan Transfer Handoff"]:::warningStyle
+        J["Senior Expert Handoff"]:::successStyle
+    end
+
+    %% Flow Connections
+    A -->|Audio| B
+    B -->|Stream| C
+    C -->|Context| D
+    D -->|Validates| E
+    E -->|API Request| F
+    G -->|Simulates| F
+
+    %% Outcome Routing
+    F --> H
+    F --> I
+    F --> J
 ```
 
 ## 🚀 Key Components
