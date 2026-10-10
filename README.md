@@ -8,7 +8,7 @@ The architecture bridges a real-time Voice AI orchestration platform with a robu
 
 ```mermaid
 
-graph LR
+graph TD
     classDef clientStyle fill:#1E293B,stroke:#38BDF8,stroke-width:2px,color:#F8FAFC;
     classDef engineStyle fill:#312E81,stroke:#818CF8,stroke-width:2px,color:#F8FAFC;
     classDef agentStyle fill:#0F766E,stroke:#2DD4BF,stroke-width:2px,color:#F8FAFC;
@@ -16,40 +16,35 @@ graph LR
     classDef warningStyle fill:#78350F,stroke:#FBBF24,stroke-width:2px,color:#F8FAFC;
     classDef dangerStyle fill:#7F1D1D,stroke:#F87171,stroke-width:2px,color:#F8FAFC;
 
-    subgraph Client ["Client & UI"]
+    subgraph Client ["Client & Validation Suite"]
         A["Customer Audio / Web Widget"]:::clientStyle
         G["Streamlit UI Simulator"]:::clientStyle
     end
 
-    subgraph Retell ["Retell AI Engine"]
-        B["Real-time Stream"]:::engineStyle
-        C["LLM Gateway"]:::engineStyle
+    subgraph Engine ["Retell AI & Agent Gateway"]
+        B["Real-time Audio Stream"]:::engineStyle
+        C["Retell AI LLM Gateway"]:::engineStyle
+        D["Agent Sharukh (System Prompt & State Machine)"]:::agentStyle
     end
 
-    subgraph Agent ["AI Agent (Sharukh)"]
-        D["System Prompt"]:::agentStyle
-        E["7-Point State Machine"]:::agentStyle
+    subgraph Backend ["FastAPI Backend & Rules Engine"]
+        F["7-Point Eligibility Rules Evaluator"]:::successStyle
     end
 
-    subgraph Backend ["FastAPI Backend"]
-        F["Eligibility Rules Evaluator"]:::successStyle
-    end
-
-    subgraph Outcomes ["Outcomes"]
-        H["Disqualification (Agricultural/Cash)"]:::dangerStyle
-        I["Loan Transfer Handoff"]:::warningStyle
-        J["Senior Expert Handoff"]:::successStyle
+    subgraph Outcomes ["Decision Outcomes"]
+        H["Disqualification (Agricultural / Cash)"]:::dangerStyle
+        I["Loan Transfer Specialist Handoff"]:::warningStyle
+        J["Senior Loan Expert Handoff"]:::successStyle
     end
 
     %% Flow Connections
-    A -->|Audio| B
-    B -->|Stream| C
-    C -->|Context| D
-    D -->|Validates| E
-    E -->|API Request| F
-    G -->|Simulates| F
+    A -->|"Audio"| B
+    B -->|"Stream"| C
+    C -->|"Context"| D
+    D -->|"Validates"| F
+    G -->|"Simulates States"| F
 
-    %% Outcome Routing
+    %% Routing
     F --> H
     F --> I
     F --> J
